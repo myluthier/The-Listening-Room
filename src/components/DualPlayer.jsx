@@ -138,6 +138,29 @@ export default function DualPlayer({ instrumentA, instrumentB, activeSlot, onTog
 
   return (
     <div>
+      {/* A/B Toggle — prominent, above the video */}
+      <div className="flex justify-center mb-4">
+        <div className="inline-flex items-center bg-stone-100 rounded-2xl p-1.5 shadow-sm border border-stone-200">
+          <span className="text-xs text-stone-400 px-3 hidden sm:block" style={{ fontFamily: "'Outfit', sans-serif" }}>
+            Compare:
+          </span>
+          {["A", "B"].map((s) => (
+            <button
+              key={s}
+              onClick={() => onToggle(s)}
+              className={`px-8 py-2.5 rounded-xl text-sm font-bold transition-all duration-200 ${
+                activeSlot === s
+                  ? "bg-stone-900 text-white shadow-lg"
+                  : "text-stone-500 hover:text-stone-800 hover:bg-stone-200"
+              }`}
+              style={{ fontFamily: "'Outfit', sans-serif" }}
+            >
+              {blindMode ? `Instrument ${s}` : (s === "A" ? instrumentA?.maker : instrumentB?.maker)}
+            </button>
+          ))}
+        </div>
+      </div>
+
       <div className="relative aspect-video bg-stone-900 rounded-2xl overflow-hidden shadow-xl">
         <div
           ref={containerARef}
@@ -185,53 +208,39 @@ export default function DualPlayer({ instrumentA, instrumentB, activeSlot, onTog
           </div>
         )}
 
-        <div className="absolute bottom-4 left-1/2 -translate-x-1/2 z-20">
-          <div className="flex items-center bg-black/70 backdrop-blur-md rounded-full p-1 shadow-2xl">
-            {["A", "B"].map((s) => (
-              <button
-                key={s}
-                onClick={() => onToggle(s)}
-                className={`px-5 py-2 rounded-full text-sm font-semibold transition-all duration-200 ${
-                  activeSlot === s ? "bg-white text-stone-900 shadow-md" : "text-white/70 hover:text-white"
-                }`}
-                style={{ fontFamily: "'Outfit', sans-serif" }}
-              >{s}</button>
-            ))}
-          </div>
-        </div>
-
         {!blindMode && (
           <div className="absolute top-4 left-4 z-20 px-3 py-1.5 bg-black/60 backdrop-blur-sm rounded-lg">
             <span className="text-white text-xs font-medium" style={{ fontFamily: "'Outfit', sans-serif" }}>
-              {activeSlot === "A" ? instrumentA?.maker : instrumentB?.maker}
+              Now playing: {activeSlot === "A" ? instrumentA?.maker : instrumentB?.maker}
             </span>
           </div>
         )}
       </div>
 
       <div className="mt-4 px-1">
-        <div className="relative h-6 flex items-center cursor-pointer group" onClick={handleSeek}>
-          <div className="absolute left-0 right-0 h-1 bg-stone-200 rounded-full group-hover:h-1.5 transition-all">
+        <div className="relative h-8 flex items-center cursor-pointer group" onClick={handleSeek}>
+          <div className="absolute left-0 right-0 h-1.5 bg-stone-200 rounded-full group-hover:h-2 transition-all">
             <div
               className="absolute left-0 top-0 h-full rounded-full"
               style={{ width: `${fraction * 100}%`, background: "linear-gradient(90deg, #78350f, #b45309)" }}
             />
           </div>
           <div
-            className="absolute w-3.5 h-3.5 rounded-full bg-amber-800 shadow-md -translate-x-1/2 opacity-0 group-hover:opacity-100 transition-opacity"
+            className="absolute w-4 h-4 rounded-full bg-amber-800 shadow-md -translate-x-1/2 transition-opacity"
             style={{ left: `${fraction * 100}%` }}
           />
         </div>
         <div className="flex items-center gap-3 mt-1">
-          <button onClick={togglePlay} className="p-2 rounded-full hover:bg-stone-100 text-stone-700 transition">
-            {isPlaying ? <Pause size={18} /> : <Play size={18} />}
+          <button onClick={togglePlay}
+            className="w-10 h-10 rounded-full bg-stone-900 hover:bg-stone-800 text-white flex items-center justify-center shadow-md hover:shadow-lg transition-all">
+            {isPlaying ? <Pause size={18} /> : <Play size={18} className="ml-0.5" />}
           </button>
-          <span className="text-xs text-stone-400 tabular-nums" style={{ fontFamily: "'Outfit', sans-serif" }}>
+          <span className="text-xs text-stone-500 font-medium tabular-nums" style={{ fontFamily: "'Outfit', sans-serif" }}>
             {formatTime(currentTime)} / {formatTime(duration)}
           </span>
           <div className="flex-1" />
-          <button onClick={toggleMute} className="p-2 rounded-full hover:bg-stone-100 text-stone-500 transition">
-            {muted ? <VolumeX size={16} /> : <Volume2 size={16} />}
+          <button onClick={toggleMute} className="p-2.5 rounded-full hover:bg-stone-100 text-stone-600 transition">
+            {muted ? <VolumeX size={18} /> : <Volume2 size={18} />}
           </button>
         </div>
       </div>

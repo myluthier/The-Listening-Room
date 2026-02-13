@@ -154,20 +154,30 @@ function SelectionStep({ instruments, onProceed }) {
         )}
       </div>
 
-      <div className="text-center mt-10">
-        <button
-          onClick={() => canProceed && onProceed(selected)}
-          disabled={!canProceed}
-          className={`inline-flex items-center gap-2 px-8 py-3.5 rounded-full text-sm font-medium transition-all duration-300 ${
-            canProceed
-              ? "bg-stone-900 text-white hover:bg-stone-800 shadow-lg hover:shadow-xl cursor-pointer"
-              : "bg-stone-200 text-stone-400 cursor-not-allowed"
-          }`}
-          style={{ fontFamily: "'Outfit', sans-serif" }}
-        >Enter the Listening Room<ChevronRight size={16} /></button>
-        <p className="text-xs text-stone-400 mt-3" style={{ fontFamily: "'Outfit', sans-serif" }}>
-          {selected.length} selected{selected.length < 2 ? " — pick at least 2" : ""}
-        </p>
+      {/* Spacer so sticky bar doesn't overlap last row */}
+      <div className="h-24" />
+
+      {/* Sticky bottom bar — always visible */}
+      <div className="fixed bottom-0 left-0 right-0 z-50 border-t border-stone-200/80 bg-white/80 backdrop-blur-xl shadow-[0_-4px_20px_rgba(0,0,0,0.06)]">
+        <div className="max-w-5xl mx-auto px-6 py-3 flex items-center justify-between gap-4">
+          <p className="text-sm text-stone-500 hidden sm:block" style={{ fontFamily: "'Outfit', sans-serif" }}>
+            <span className="font-semibold text-stone-700">{selected.length}</span> instrument{selected.length !== 1 ? "s" : ""} selected
+            {selected.length < 2 && <span className="text-stone-400"> — pick at least 2</span>}
+          </p>
+          <p className="text-xs text-stone-500 sm:hidden" style={{ fontFamily: "'Outfit', sans-serif" }}>
+            <span className="font-semibold text-stone-700">{selected.length}</span> selected
+          </p>
+          <button
+            onClick={() => canProceed && onProceed(selected)}
+            disabled={!canProceed}
+            className={`inline-flex items-center gap-2 px-7 py-3 rounded-full text-sm font-semibold transition-all duration-300 ${
+              canProceed
+                ? "bg-stone-900 text-white hover:bg-stone-800 shadow-lg hover:shadow-xl cursor-pointer"
+                : "bg-stone-200 text-stone-400 cursor-not-allowed"
+            }`}
+            style={{ fontFamily: "'Outfit', sans-serif" }}
+          >Enter the Listening Room<ChevronRight size={16} /></button>
+        </div>
       </div>
     </div>
   );
@@ -299,7 +309,12 @@ function CompareStep({ instruments, allInstruments, onFinish, onBack }) {
       <DualPlayer instrumentA={currentA} instrumentB={currentB}
         activeSlot={activeSlot} onToggle={setActiveSlot} blindMode={blindMode} />
 
-      <div className="grid grid-cols-2 gap-4 mt-8">
+      {/* Choice section — clearly separated from the A/B toggle */}
+      <div className="mt-10 pt-6 border-t border-stone-200">
+        <p className="text-center text-sm font-medium text-stone-600 mb-4" style={{ fontFamily: "'Outfit', sans-serif" }}>
+          Ready to decide? Pick your favourite:
+        </p>
+        <div className="grid grid-cols-2 gap-4">
         {[
           { slot: "A", label: labelA, sublabel: nameA },
           { slot: "B", label: labelB, sublabel: nameB },
@@ -323,22 +338,23 @@ function CompareStep({ instruments, allInstruments, onFinish, onBack }) {
                 </div>
               </div>
             </div>
-            <div className="mt-4 text-xs font-medium text-amber-800 opacity-0 group-hover:opacity-100 transition-opacity text-center"
-              style={{ fontFamily: "'Outfit', sans-serif" }}>I prefer this one →</div>
+            <div className="mt-4 text-xs font-semibold text-amber-800 text-center"
+              style={{ fontFamily: "'Outfit', sans-serif" }}>Choose {slot} ✓</div>
           </button>
         ))}
+      </div>
       </div>
 
       <div className="text-center mt-5">
         <button onClick={handleNotSure}
-          className="inline-flex items-center gap-2 px-5 py-2.5 rounded-xl text-sm text-stone-500 hover:text-stone-700 bg-stone-100 hover:bg-stone-200 transition-all"
+          className="inline-flex items-center gap-2 px-6 py-3 rounded-xl text-sm font-medium text-stone-700 bg-white border-2 border-stone-300 hover:border-stone-400 hover:bg-stone-50 shadow-sm hover:shadow transition-all"
           style={{ fontFamily: "'Outfit', sans-serif" }}>
-          <Shuffle size={14} />Not sure — skip and compare later
+          <Shuffle size={15} />Not sure — skip and compare later
         </button>
       </div>
 
       <p className="text-center text-xs text-stone-400 mt-6" style={{ fontFamily: "'Outfit', sans-serif" }}>
-        Toggle between A and B to compare, then choose your favourite
+        Use the A / B buttons above the player to switch between recordings
         {blindMode && <span className="block mt-1 text-stone-500 font-medium">Blind mode — instrument names are hidden</span>}
       </p>
     </div>
